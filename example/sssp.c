@@ -2,6 +2,7 @@
 #include "glaph.h"
 
 GrB_Vector shortest_path(GrB_Matrix A, uint64_t start) {
+    GrB_Vector v, w;
     NEWV(v);
     NEWV(w);
     ASSIGN(v, start, 0);
@@ -16,6 +17,8 @@ GrB_Vector shortest_path(GrB_Matrix A, uint64_t start) {
 }
 
 void main(int argc, char *argv[]) {
+    GrB_Matrix A;
+    GrB_Vector v;
     INIT();
     NEW(A);
     LOAD_MM(A, 'data.mm');
@@ -23,6 +26,3 @@ void main(int argc, char *argv[]) {
     PRINT(v);
     FINALIZE();
 }
-
-#include "unglaph.h"
-
