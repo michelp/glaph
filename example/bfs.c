@@ -16,31 +16,19 @@ def shortest_path_length(matrix, start):
 
 void main(int argc, char *argv[]) {
     INIT();
-
-    NEW(C);
     NEW(A);
-    NEW(B);
-    NEW(M, GrB_BOOL);
-    
-    SET(A, 1.0, 0, 0);
-    SET(A, 1.0, 1, 1);
-
-    PRINT(A);
-    
-    SET(B, 1.0, 1, 0);
-    SET(B, 1.0, 0, 1);
-    
-    PRINT(B);
-    
-    SET(M, true, 0, 1);
-    SET(M, true, 1, 1);
-
-    PRINT(M);
-    
-    AXB(C, A, B, .mask=M, .descriptor=GrB_DESC_T1);
-    
-    PRINT(C, .level=5);
-    
+    LOAD_TSV(A, 'data.tsv');
+    VNEW(v);
+    VNEW(w);
+    SET(v, start, 0);
+    NROWS(n, A);
+    FOR(i, 0, n) {
+        DUP(w, v);
+        AXB(v, v, A, .semiring=GrB_MIN_PLUS_SEMIRING_INT64, .accum=GrB_MIN_INT64);
+        if (ISEQ(w, v))
+            break;
+    }
+    FREE(A, v, w);
     FINALIZE();
 }
 
