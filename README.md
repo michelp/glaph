@@ -32,7 +32,7 @@ arguments, as given in this example).
 Everyone knows C doesn't have keyword arguments.  Glaph bends reality
 slightly with some macro sleigh of hand to make using the C api a lot
 easier.  Combined with the polymorphism of generic macros, there is a
-lot of simplication.  
+lot of simplication.  Don't worry it's all pure 100% C!
 
 For example `AXB` is the generic matrix mulitpilicaiton macro in
 glaph.  It covers all cases that `GrB_mxm`, `GrB_vxm` and `GrB_mxv`
