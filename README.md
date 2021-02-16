@@ -89,7 +89,7 @@ Here is the equivalent Python with pygraphblas:
         v = Vector.sparse(A.type, A.nrows)
         v[start] = 0
         with INT64.MIN_PLUS, Accum(INT64.MIN):
-            for _ in A.rows:
+            for _ in A.I:
                 w.clear()
                 w[:] = v
                 v @= A
