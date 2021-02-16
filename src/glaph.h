@@ -1,17 +1,22 @@
-#define _GF_CATCH(info) { printf("outch: %u\n", info); exit(1); }
-#define _GF_TRY(GrB_method) { GrB_Info info = GrB_method ;              \
-        if (! (info == GrB_SUCCESS || info == GrB_NO_VALUE))         \
-            _GF_CATCH (info) ; }                                        \
+#define GL_CATCH(info) { printf("outch: %u\n", info); exit(1); }
+#define GL_TRY(GrB_method) { GrB_Info info = GrB_method ;              \
+        if (! (info == GrB_SUCCESS || info == GrB_NO_VALUE))            \
+            GL_CATCH (info) ; }                                        \
         
-#define _GF_DEFKWARGS(N, ...) typedef struct {__VA_ARGS__;} _GF_ ## N ## _kwargs
-#define _GF_KWARG(T, m, d) T m = kwargs.m ? kwargs.m : d
+#define _GL_KWARGS_STRUCT_NAME(T, name) _GL_ ## T ## _ ## name ## _kwargs
+#define _GL_KWARGS_STRUCT(T, name, ...) typedef struct {__VA_ARGS__;} _GL_KWARGS_STRUCT_NAME(T, name)
+#define _GL_KWARGS_FUNC_NAME(T, name) _GL_ ## T ## _ ## name ## _func
+#define _GL_KWARGS_FUNC(T, name, ...)                                   \
+    static inline void _GL_KWARGS_FUNC_NAME(T, name)(__VA_ARGS__ __VA_OPT__(,) _GL_KWARGS_STRUCT_NAME(T, name) kwargs)
 
-#define GF_INIT() { printf("glaph 0.1\n"); GrB_init(GrB_NONBLOCKING); }
-#define GF_FINALIZE() {printf("Byee\n"); GrB_finalize();}
-#define GF_FOR(i, s, e) for(GrB_Index i = s; i < e; i++)
-#define GF_FREE(...)
+#define _GL_KWARG(T, m, d) T m = kwargs.m ? kwargs.m : d
 
-#define _GF_(p, prefix, T, func)                                      \
+#define GL_INIT() { printf("glaph (Generic Library for GraphBLAS) 0.1\n"); GrB_init(GrB_NONBLOCKING); }
+#define GL_FINALIZE() GrB_finalize();
+#define GL_FOR(i, s, e) for(GrB_Index i = s; i < e; i++)
+#define GL_FREE(...)
+
+#define _GL_(p, prefix, T, func)                                      \
     const bool       p : prefix ## _ ## T ## _ ## func ## _BOOL   ,   \
           bool       p : prefix ## _ ## T ## _ ## func ## _BOOL   ,   \
     const int8_t     p : prefix ## _ ## T ## _ ## func ## _INT8   ,   \

@@ -1,12 +1,15 @@
-# You gotta glaph about it
+# glaph: Generics Library for GraphBLAS
 
 glaph is an include-only C library of macros that make working with
-the GraphBLAS API less existential and more hallucinogenic.  Just copy
-the header files into your project and do:
+the GraphBLAS API less C like and more "Python like".  Just copy the
+header files into your project and do:
+
+    #include "glaph.h"
 
 ## So what's so funny
 
-Glaph is macro meta-boilerplate for dealing with GraphBLAS objects.  Instead of:
+Glaph is macro and inline function meta-boilerplate for dealing with
+GraphBLAS objects.  Instead of:
 
     GrB_TRY(GrB_Matrix_new(&A, GrB_FP64, nrows, ncols));
     
@@ -14,9 +17,22 @@ In glaph you just do:
 
     MNEW(A);
     
-Glaph declares the variable, initializes it as a hypersparse matrix
-with default type FP64.  It is now ready to use in your program for
-many cases.
+This is a rather tame example of a glaph macro.  It initializes it as
+a hypersparse matrix with default type FP64.  It is now ready to use
+in your program for many cases.  But lets say you don't want a 10 by
+10 boolean matrix instead, do:
+
+    MNEW(A, 10, 10, .type=GrB_BOOL);
+    
+It's the same macro, it's just generic enough to handle various cases
+including optional types and dimensions provided as keywork arguments.
+
+Now, everyone knows C doesn't have keyword arguments.  Glaph bends
+reality with some macro sleigh of hand to make using the C api a lot
+easier.  Combined with the polymorphism of generic macros, there is a
+lot of simplication and glaph algorithms are usualy line for line
+operationally identical to their Python equivalents.  Don't worry it's
+all pure 100% C!
 
 ## Even more Generic
 
@@ -29,14 +45,31 @@ arguments, as given in this example).
 
 glaph takes this idea even further, instead of
 `GrB_Matrix_setElement`, the `ASSIGN` macro can handle the scalar case
-as well as the already supported vector and matrix cases.
+as well as the already supported vector and matrix cases.  It also
+includes support for `GxB_Scalar`, All in one macro.
+
+This pattern is carred over to `GL_EXTRACT` as well, you can extract
+sub-graphs, vectors, Scalars, and C scalar values all with one macro.
+
+All macros take the pattern:
+
+   NAME(C, [A, [B, ...] ...])
+   
+They all require at least one input (for things like `GL_PRINT`) or
+output.  Glaph macros NEVER return values so never do something like
+`x = GL_NAME(...)`.  If the macro has output, it is always the first
+argument.  Keyword arguments depend on whatever pattern of positional
+arguments matched the _Generic expansion.  `GL_EXTRACT` for example,
+will accept `mask`, `accum` and `desc` keywork arguments in all cases
+except scalar.  Trying to use inappropriate keyworks arguments will
+result in a compiler error.
+
+All glaph macros automatically check for and handle suitesparse
+errors.  The default behavior is to print and abort on any error
+except `GrB_SUCCESS` or `GrB_NO_VALUE`.  You can re-define the
+`GL_CATCH` macro to handle your own errors.
 
 ## Keyword arguments?
-
-Everyone knows C doesn't have keyword arguments.  Glaph bends reality
-slightly with some macro sleigh of hand to make using the C api a lot
-easier.  Combined with the polymorphism of generic macros, there is a
-lot of simplication.  Don't worry it's all pure 100% C!
 
 For example `AXB` is the generic matrix mulitpilicaiton macro in
 glaph.  It covers all cases that `GrB_mxm`, `GrB_vxm` and `GrB_mxv`
@@ -54,4 +87,8 @@ wall of NULLs they are specified by keyword argument:
          .desc=GrB_DESC_T0);
 
 The "keyword arguments" are really the guts of a struct initializer
-that the macro is hiding from you.  No worries, it all works out great.
+that the macro is hiding from you.  No worries, it all works out
+great.  In fact, the C compiler knows that these structs are all
+statically initialized, and completely optimizes all of glaph away,
+exactly compiling the same assembly code that using the GraphBLAS API
+directly "by hand" would create.
