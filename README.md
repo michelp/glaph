@@ -1,8 +1,8 @@
 # glaph: Generics Library for GraphBLAS
 
-glaph is an include-only C library of macros that make working with
-the GraphBLAS API less C like and more "Python like".  Just copy the
-header files into your project and do:
+glaph is an include-only C library of macros and inline functions that
+make working with the GraphBLAS API less C like and more "Python
+like".  Just copy the header files into your project and do:
 
     #include "glaph.h"
 
@@ -34,6 +34,34 @@ lot of simplication and glaph algorithms are usualy line for line
 operationally identical to their Python equivalents.  Don't worry it's
 all pure 100% C!
 
+Another example is that where the GraphBLAS C API provides `GrB_mxm`,
+`GrB_mxv` and `GrB_vxm` for Matix/Matrix, Matrix/Vector, and
+Vector/Matrix multiplication respectively, glaph has only `GL_AXB(C,
+A, B)`:
+
+        GL_AXB(C, A, B,
+               .mask=M,
+               .accum=GrB_MIN_INT64);
+               
+        GL_AXB(c, a, B,
+               .mask=m,
+               .semiring=GrB_MIN_PLUS_SEMIRING_INT64);
+
+        GL_AXB(c, A, b,
+               .mask=m,
+               .semiring=GrB_MIN_PLUS_SEMIRING_INT64, 
+               .accum=GrB_MIN_INT64);
+               
+The only invalid combination is (Vector, Vector, Vector) which will
+throw a compiler error.
+
+One of the consequence of glaph using C metaprogramming is that the C
+compiler optimizing pass will generate the same code that you would
+have written by hand.  The keyword arguments structs and inline
+functions "evaporate" to static arguments, just as if you had placed
+them there by hand.  In a sense glaph self-destructs when it's
+compiled, leaving only a GraphBLAS program behind.
+
 ## Even more Generic
 
 SuiteSparse comes with a number of generic macros that can work with
@@ -49,11 +77,13 @@ as well as the already supported vector and matrix cases.  It also
 includes support for `GxB_Scalar`, All in one macro.
 
 This pattern is carred over to `GL_EXTRACT` as well, you can extract
-sub-graphs, vectors, Scalars, and C scalar values all with one macro.
+sub-graphs, vectors, Scalars, and C scalar values all with one macro,
+each with its own distinct set of keyword arguments depending on the
+input types of the operation.
 
 All macros take the pattern:
 
-   NAME(C, [A, [B, ...] ...])
+   GL_NAME(C, [A, [B, ...] ...])
    
 They all require at least one input (for things like `GL_PRINT`) or
 output.  Glaph macros NEVER return values so never do something like
@@ -64,7 +94,7 @@ will accept `mask`, `accum` and `desc` keywork arguments in all cases
 except scalar.  Trying to use inappropriate keyworks arguments will
 result in a compiler error.
 
-All glaph macros automatically check for and handle suitesparse
+All glaph macros automatically check for and handle SuiteSparse
 errors.  The default behavior is to print and abort on any error
 except `GrB_SUCCESS` or `GrB_NO_VALUE`.  You can re-define the
 `GL_CATCH` macro to handle your own errors.
@@ -77,8 +107,8 @@ cover in the API.  Just Do `AXB (C, A, B)` and the macro will expand
 to the correct underlying function for the argument types with all the
 optional arguments filled in with `NULL`.
 
-All other arguments to those 3 functions are optional, so instead of a
-wall of NULLs they are specified by keyword argument:
+All other arguments to those 3 functions are optional, so they are
+specified by keyword argument:
 
     AXB (v, AT, w,
          .mask=M,
