@@ -62,6 +62,41 @@ functions "evaporate" to static arguments, just as if you had placed
 them there by hand.  In a sense glaph self-destructs when it's
 compiled, leaving only a GraphBLAS program behind.
 
+## shortest path example
+
+This is the shortest path example:
+
+    GrB_Vector sssp(GrB_Matrix A, uint64_t start) {
+        GrB_Vector v, w;
+        GL_VNEW(v);
+        GL_VNEW(w);
+        GL_ASSIGN(v, start, 0);
+        FORI(A, i) {
+            GL_CLEAR(w);
+            GL_ASSIGN(w, v);
+            GL_AXB(v, v, A,
+                   .semiring=GrB_MIN_PLUS_SEMIRING_INT64, .accum=GrB_MIN_INT64);
+            if (GL_ISEQ(w, v))
+                break;
+        }
+        GL_FREE(w);
+        return v;
+    }
+
+Here is the equivalent Python with pygraphblas:
+
+    def sssp(A, start):
+        v = Vector.sparse(A.type, A.nrows)
+        v[start] = 0
+        with INT64.MIN_PLUS, Accum(INT64.MIN):
+            for _ in A.rows:
+                w.clear()
+                w[:] = v
+                v @= A
+                if w.iseq(v):
+                    break
+            return v
+
 ## Even more Generic
 
 SuiteSparse comes with a number of generic macros that can work with
