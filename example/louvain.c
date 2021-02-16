@@ -9,59 +9,58 @@ GrB_Vector louvain(GrB_Matrix A, uint64_t itermax) {
     float m, f;
     bool changed, exists;
 
-    NROWS  (A,     n) ;
-    MNEW   (ApAT,  n, n) ;
-    IDENT  (S,     n, true, .type=GrB_BOOL) ;
-    VNEW   (Sj,    n, .type=GrB_BOOL) ;
-    VNEW   (empty, n, .type=GrB_BOOL) ;
-    VNEW   (k,     n) ;
-    VNEW   (v,     n) ;
-    VNEW   (q,     n) ;
-    VNEW   (t,     n) ;
-    SNEW   (max) ;
+    GF_NROWS  (A,     n) ;
+    GF_MNEW   (ApAT,  n, n) ;
+    GF_IDENT  (S,     n, true, .type=GrB_BOOL) ;
+    GF_VNEW   (Sj,    n, .type=GrB_BOOL) ;
+    GF_VNEW   (empty, n, .type=GrB_BOOL) ;
+    GF_VNEW   (k,     n) ;
+    GV_VNEW   (v,     n) ;
+    GF_VNEW   (q,     n) ;
+    GF_VNEW   (t,     n) ;
+    GF_SNEW   (max) ;
 
-    EADD   (ApAT,  A, T(A), .desc=GrB_DESC_T0) ;
-    REDUCE (k,     A) ;
-    REDUCE (m,     k) ;
-    APPLY  (k,     k, GrB_AINV_FP64) ;
-    APPLY  (k,     k, GrB_DIV_FP64, m) ;
+    GF_EADD   (ApAT,  A, T(A), .desc=GrB_DESC_T0) ;
+    GF_REDUCE (k,     A) ;
+    GF_REDUCE (m,     k) ;
+    GF_APPLY  (k,     k, GrB_AINV_FP64) ;
+    GF_APPLY  (k,     k, GrB_DIV_FP64, m) ;
 
-    FOR(i, 0, itermax && changed) {
+    GF_FOR(i, 0, itermax && changed) {
         changed = false;
-        FORI(k, j) {
-            EXTRACT (Sj, S, j, .desc=GrB_DESC_T0) ;
-            ASSIGN  (S,  empty, j);
-            EXTRACT (v,  ApAT, j, GrB_DESC_T0) ;
-            EXTRACT (f,  v, j) ;
-            APPLY   (v,  GrB_PLUS_FP32, v, f) ;
-            AXB     (q,  v, S) ;
-            NVALS   (tn, q);
+        GF_FORI(k, j) {
+            GF_EXTRACT (Sj, S, j, .desc=GrB_DESC_T0) ;
+            GF_ASSIGN  (S,  empty, j);
+            GF_EXTRACT (v,  ApAT, j, GrB_DESC_T0) ;
+            GF_EXTRACT (f,  v, j) ;
+            GF_APPLY   (v,  GrB_PLUS_FP32, v, f) ;
+            GF_AXB     (q,  v, S) ;
+            GF_NVALS   (tn, q);
             if (tn == 0)
                 continue ;
 
-            SELECT  (t, q, "max") ;
+            GF_SELECT  (t, q, "max") ;
             if (tn == 1)
-                r = GETI(ts, 0) ;
+                r = GF_GETI(ts, 0) ;
             else
-                RANDI(r, ts);
+                GF_RANDI(r, ts);
 
-            ASSIGN (S, true, j, r) ;
-            EXISTS(exists, Sj, r) ;
+            GF_ASSIGN (S, true, j, r) ;
+            GF_EXISTS(exists, Sj, r) ;
             if (!exists)
                 changed = True ;
         }
     }
-    FREE (S, ApAT, Sj, k, empty, v, q, t, max) ;
+    GF_FREE (S, ApAT, Sj, k, empty, v, q, t, max) ;
     return v;
 }
 
 void main(int argc, char *argv[]) {
-    INIT () ;
-    MNEW (A, .nrows=10, .ncols=10) ;
-    VNEW (v) ;
-
-    LOAD_MM(A, 'data.mm') ;
+    GF_INIT () ;
+    GF_MNEW (A, .nrows=10, .ncols=10) ;
+    GF_VNEW (v) ;
+    GF_MMREAD(A, 'data.mm') ;
     v = louvain(A, 0) ;
-    PRINT(v) ;
-    FINALIZE() ;
+    GF_PRINT(v) ;
+    GF_FINALIZE() ;
 }

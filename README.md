@@ -27,6 +27,10 @@ right order and type of arguments that the compiler will pick the
 right concrete function (for matrices with double floating point
 arguments, as given in this example).
 
+glaph takes this idea even further, instead of
+`GrB_Matrix_setElement`, the `ASSIGN` macro can handle the scalar case
+as well as the already supported vector and matrix cases.
+
 ## Keyword arguments?
 
 Everyone knows C doesn't have keyword arguments.  Glaph bends reality
