@@ -35,21 +35,21 @@
 
 #define GL_EXTRACT(x, C, ...)                                           \
     GL_TRY(                                                             \
-           _GL_GENERIC(C,                                               \
-                       _GL_GENERIC_OP(x, *, GrB, Matrix, extractElement), \
-                       _GL_GENERIC_OP(x, *, GrB, Vector, extractElement), \
-                       _GL_GENERIC_OP(x, *, GxB, Scalar, extractElement)) \
+           _GL_GENERIC((C),                                             \
+                       _GL_GENERIC_OP((x), *, GrB, Matrix, extractElement), \
+                       _GL_GENERIC_OP((x), *, GrB, Vector, extractElement), \
+                       _GL_GENERIC_OP((x), *, GxB, Scalar, extractElement)) \
            (x, C, __VA_ARGS__))
 
 #define GL_EXISTS(e, x, C, ...)                                         \
-    { GrB_Info info =  _GL_GENERIC(C,                                   \
-                       _GL_GENERIC_OP(x,, GrB, Matrix, extractElement), \
-                       _GL_GENERIC_OP(x,, GrB, Vector, extractElement), \
-                       _GL_GENERIC_OP(x,, GxB, Scalar, extractElement)) \
-        if (info == GrB_NO_VALUE)                                       \
-            e = false;                                                  \
+    { GrB_Info info =  _GL_GENERIC((C),                                 \
+                                   _GL_GENERIC_OP((x),, GrB, Matrix, extractElement), \
+                                   _GL_GENERIC_OP((x),, GrB, Vector, extractElement), \
+                                   _GL_GENERIC_OP((x),, GxB, Scalar, extractElement)) \
+            if (info == GrB_NO_VALUE)                                   \
+            (e) = false;                                                \
         else                                                            \
-            e = true;                                                   \
+            (e) = true;                                                 \
         if (! (info == GrB_SUCCESS || info == GrB_NO_VALUE))            \
             GL_CATCH (info) ;                                           \
     }
