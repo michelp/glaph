@@ -1,19 +1,19 @@
 #define GL_CATCH(info) { printf("outch: %u\n", info); exit(1); }
 #define GL_TRY(GrB_method) { GrB_Info info = GrB_method ;              \
-        if (! (info == GrB_SUCCESS || info == GrB_NO_VALUE))            \
+        if (! (info == GrB_SUCCESS || info == GrB_NO_VALUE))           \
             GL_CATCH (info) ; }                                        \
         
-#define _GL_KWARGS_STRUCT_NAME(T, name) _GL_ ## T ## _ ## name ## _kwargs
-#define _GL_KWARGS_STRUCT(T, name, ...) typedef struct {__VA_ARGS__;} _GL_KWARGS_STRUCT_NAME(T, name)
-#define _GL_KWARGS_FUNC_NAME(T, name) _GL_ ## T ## _ ## name ## _func
-#define _GL_KWARGS_FUNC(T, name, ...)                                   \
-    static inline void _GL_KWARGS_FUNC_NAME(T, name)(__VA_ARGS__ __VA_OPT__(,) _GL_KWARGS_STRUCT_NAME(T, name) kwargs)
+#define _GL_SNAME(T, name) _GL_ ## T ## _ ## name ## _kwargs
+#define _GL_STRUCT(T, name, ...) typedef struct {__VA_ARGS__;} _GL_SNAME(T, name)
+#define _GL_FNAME(T, name) _GL_ ## T ## _ ## name ## _func
+#define _GL_FUNC(T, name, S, sname, ...)                                \
+    static inline void _GL_FNAME(T, name)(__VA_ARGS__ __VA_OPT__(,) _GL_SNAME(S, sname) kwargs)
 
-#define _GL_KWARG(T, m, d) T m = kwargs.m ? kwargs.m : d
+#define _GL_KWARG(T, m, d) T m = kwargs.m ? kwargs.m : (d)
 
 #define GL_INIT() { printf("glaph (Generic Library for GraphBLAS) 0.1\n"); GrB_init(GrB_NONBLOCKING); }
 #define GL_FINALIZE() GrB_finalize();
-#define GL_FOR(i, s, e) for(GrB_Index i = s; i < e; i++)
+#define GL_FOR(i, s, e) for(GrB_Index (i) = (s); (e); (i)++)
 #define GL_FREE(...)
 
 #define _GL_(p, prefix, T, func)                                      \

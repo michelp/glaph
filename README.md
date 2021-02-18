@@ -71,11 +71,12 @@ This is the shortest path example:
         GL_VNEW(v);
         GL_VNEW(w);
         GL_ASSIGN(v, start, 0);
-        FORI(A, i) {
+        GL_FORI(A, i) {
             GL_CLEAR(w);
             GL_ASSIGN(w, v);
             GL_AXB(v, v, A,
-                   .semiring=GrB_MIN_PLUS_SEMIRING_INT64, .accum=GrB_MIN_INT64);
+                   .semiring=GrB_MIN_PLUS_SEMIRING_INT64, 
+                   .accum=GrB_MIN_INT64);
             if (GL_ISEQ(w, v))
                 break;
         }

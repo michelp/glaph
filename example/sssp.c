@@ -19,7 +19,7 @@ GrB_Vector shortest_path(GrB_Matrix A, uint64_t start) {
 }
 
 void main(int argc, char *argv[]) {
-    GrB_Matrix A;
+    GrB_Matrix A;p
     GrB_Vector v;
     GL_INIT    (.mode=GrB_NONBLOCKING);
     GL_MNEW    (A);

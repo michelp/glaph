@@ -24,9 +24,16 @@ void main(int argc, char *argv[]) {
     GL_ASSIGN(M, true, 1, 1);
     GL_PRINT(M);
     
+    GL_ASSIGN (j, 1.0, 0);
+    GL_ASSIGN (j, 1.0, 1);
+    GL_PRINT(j);
+    
     GL_AXB(C, A, B, .mask=M, .descriptor=GrB_DESC_T1);
     GL_PRINT(C, .level=5);
 
+    GL_AXB(k, A, j, .vmask=m, .descriptor=GrB_DESC_T1);
+    GL_PRINT(k, .level=5);
+    
     double d;
     GL_EXTRACT(&d, C, 0, 1);
 
