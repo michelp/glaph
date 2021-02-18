@@ -38,11 +38,11 @@ void main(int argc, char *argv[]) {
     GL_EXTRACT(&d, C, 0, 1);
 
     bool exists;
-    GL_EXISTS(exists, &d, C, 0, 1);
-    printf("exists is %i d is %f\n", exists, d);
+    /* GL_EXISTS(exists, &d, C, 0, 1); */
+    /* printf("exists is %i d is %f\n", exists, d); */
     
-    GL_EXISTS(exists, &d, C, 1, 1);
-    printf("exists is %i d is %f\n", exists, d);
+    /* GL_EXISTS(exists, &d, C, 1, 1); */
+    /* printf("exists is %i d is %f\n", exists, d); */
     
     GL_PRINT(GxB_ANY_SECOND_INT8, .level=5);
 

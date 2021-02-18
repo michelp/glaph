@@ -10,16 +10,22 @@
 // ASSIGN(v, v) Assign vector to vector
 // ASSIGN(v, s, i) set element
 
+#define _GL_GENERIC(C, M, V, S)                                         \
+    _Generic((C),                                                       \
+             GrB_Matrix : M,                                            \
+             GrB_Vector : V,                                            \
+             GxB_Scalar : S)                                            
+
+#define _GL_GENERIC_OP(x, p, P, T, F)                                  \
+    _Generic( (x), _GL_(p, P, T, F))                                   \
+
 #define GL_ASSIGN(C, x, ...)                                            \
     GL_TRY(                                                             \
-           _Generic((C),                                                \
-                    GrB_Vector :                                        \
-                    _Generic                                            \
-                    ((x), _GL_(, GrB, Vector, setElement)),             \
-                    GrB_Matrix :                                        \
-                    _Generic                                            \
-                    ((x), _GL_(, GrB, Matrix, setElement))              \
-                    )(C, x, __VA_ARGS__))
+           _GL_GENERIC(C,                                               \
+                       _GL_GENERIC_OP(x,, GrB, Matrix, setElement),     \
+                       _GL_GENERIC_OP(x,, GrB, Vector, setElement),     \
+                       _GL_GENERIC_OP(x,, GxB, Scalar, setElement))     \
+           (C, x, __VA_ARGS__))
 
 // EXTRACT(M, M)  Extract matrix from matrix
 // EXTRACT(v, M, i) Extract vector from row, .desc=GrB_DESC_T0 for col extract
@@ -29,27 +35,17 @@
 
 #define GL_EXTRACT(x, C, ...)                                           \
     GL_TRY(                                                             \
-         _Generic((C),                                                  \
-                  GrB_Vector :                                          \
-                  _Generic                                              \
-                  ((x), _GL_(*, GrB, Vector, extractElement)),          \
-                  GrB_Matrix :                                          \
-                  _Generic                                              \
-                  ((x), _GL_(*, GrB, Matrix, extractElement))           \
-                  (x, C, __VA_ARGS__)))
+           _GL_GENERIC(C,                                               \
+                       _GL_GENERIC_OP(x, *, GrB, Matrix, extractElement), \
+                       _GL_GENERIC_OP(x, *, GrB, Vector, extractElement), \
+                       _GL_GENERIC_OP(x, *, GxB, Scalar, extractElement)) \
+           (x, C, __VA_ARGS__))
 
-// Unlike the scalar EXTRACT, which must only be used for
-// extractElement if the entry is know to exist, EXISTS sets a flag if
-// to false if it doesn't and also assigns a variable in one step.
 #define GL_EXISTS(e, x, C, ...)                                         \
-    { GrB_Info info =  _Generic((C),                                    \
-                           GrB_Vector :                                 \
-                           _Generic                                     \
-                           ((x), _GL_(*, GrB, Vector, extractElement)), \
-                           GrB_Matrix :                                 \
-                           _Generic                                     \
-                           ((x), _GL_(*, GrB, Matrix, extractElement))  \
-                           (x, C, __VA_ARGS__));                        \
+    { GrB_Info info =  _GL_GENERIC(C,                                   \
+                       _GL_GENERIC_OP(x,, GrB, Matrix, extractElement), \
+                       _GL_GENERIC_OP(x,, GrB, Vector, extractElement), \
+                       _GL_GENERIC_OP(x,, GxB, Scalar, extractElement)) \
         if (info == GrB_NO_VALUE)                                       \
             e = false;                                                  \
         else                                                            \
@@ -91,3 +87,4 @@ _Generic(                                                               \
          GrB_Matrix:   _GL_FNAME(GrB_Matrix,   print))                  \
 (C, (_GL_SNAME(GrB, print)){__VA_ARGS__});
 
+#define GL_CLEAR(...)

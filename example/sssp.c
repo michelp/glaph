@@ -1,12 +1,12 @@
 #include <GraphBLAS.h>
 #include "glaph.h"
 
-GrB_Vector shortest_path(GrB_Matrix A, uint64_t start) {
+GrB_Vector sssp(GrB_Matrix A, uint64_t start) {
     GrB_Vector v, w;
     GL_VNEW(v);
     GL_VNEW(w);
-    GL_ASSIGN(v, start, 0);
-    FORI(A, i) {
+    GL_ASSIGN(v, 0, start);
+    GL_FORI(i, A) {
         GL_CLEAR(w);
         GL_ASSIGN(w, v);
         GL_AXB(v, v, A,
@@ -19,7 +19,7 @@ GrB_Vector shortest_path(GrB_Matrix A, uint64_t start) {
 }
 
 void main(int argc, char *argv[]) {
-    GrB_Matrix A;p
+    GrB_Matrix A;
     GrB_Vector v;
     GL_INIT    (.mode=GrB_NONBLOCKING);
     GL_MNEW    (A);

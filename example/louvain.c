@@ -28,7 +28,7 @@ GrB_Vector louvain(GrB_Matrix A, uint64_t itermax) {
 
     GL_FOR(i, 0, i < itermax && changed) {
         changed = false;
-        GL_FORI(k, j) {
+        GL_FORI(j, k) {
             GL_EXTRACT (Sj, S, j, .desc=GrB_DESC_T0) ;
             GL_ASSIGN  (S,  e, j);
             GL_EXTRACT (v,  ApAT, j, .desc=GrB_DESC_T0) ;

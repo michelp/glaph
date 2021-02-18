@@ -11,10 +11,17 @@
 
 #define _GL_KWARG(T, m, d) T m = kwargs.m ? kwargs.m : (d)
 
-#define GL_INIT() { printf("glaph (Generic Library for GraphBLAS) 0.1\n"); GrB_init(GrB_NONBLOCKING); }
+#define GL_INIT() { printf("glaph ((G)eneric (L)ibrary for Gr(aph)BLAS) 0.1\n"); GrB_init(GrB_NONBLOCKING); }
 #define GL_FINALIZE() GrB_finalize();
 #define GL_FOR(i, s, e) for(GrB_Index (i) = (s); (e); (i)++)
 #define GL_FREE(...)
+#define GL_FORI(I, A)                                                   \
+    GrB_Index kn;                                                       \
+    GrB_Index *ks;                                                      \
+    GL_TRY (GrB_Matrix_nrows (&kn, A)) ;                                \
+    ks = malloc (kn * sizeof (GrB_Index)) ;                             \
+    GL_TRY (GrB_Matrix_extractTuples (ks, NULL, NULL, &kn, A)) ;        \
+    for (GrB_Index ki_ = 0, I = ks[0]; ki_ < kn; ki_++, I = ks[ki_])
 
 #define _GL_(p, prefix, T, func)                                      \
     const bool       p : prefix ## _ ## T ## _ ## func ## _BOOL   ,   \
