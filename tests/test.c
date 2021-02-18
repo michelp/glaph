@@ -49,7 +49,20 @@ void main(int argc, char *argv[]) {
     
     GL_EXISTS(exists, &d, j, 2);
     printf("exists is %i d is %f\n", exists, d);
+
+    GrB_Index Cn;
+    GL_NVALS(Cn, C);
+    printf("C nvals %lu\n", Cn);
+    GL_CLEAR(C);
+    GL_NVALS(Cn, C);
+    printf("C clear nvals %lu\n", Cn);
     
+    GL_NVALS(Cn, j);
+    printf("j nvals %lu\n", Cn);
+    GL_CLEAR(j);
+    GL_NVALS(Cn, j);
+    
+    printf("j clear nvals %lu\n", Cn);
     //GL_PRINT(GxB_ANY_SECOND_INT8, .level=5);
 
     GL_FINALIZE();

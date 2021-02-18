@@ -30,7 +30,7 @@ GrB_Vector louvain(GrB_Matrix A, uint64_t itermax) {
         changed = false;
         GL_FORI(j, k) {
             GL_GET (Sj, S, j, .desc=GrB_DESC_T0) ;
-            GL_ASSIGN  (S,  e, j);
+            GL_SET  (S,  e, j);
             GL_GET (v,  ApAT, j, .desc=GrB_DESC_T0) ;
             GL_GET (f,  v, j) ;
             GL_APPLY   (v,  GrB_PLUS_FP32, v, f) ;
@@ -45,7 +45,7 @@ GrB_Vector louvain(GrB_Matrix A, uint64_t itermax) {
             else
                 GL_RANDI(r, ts);
 
-            GL_ASSIGN (S, true, j, r) ;
+            GL_SET (S, true, j, r) ;
             GL_EXISTS (exists, Sj, r) ;
             if (!exists)
                 changed = True ;
