@@ -19,7 +19,7 @@
 #define _GL_GENERIC_OP(x, p, P, T, F)                                  \
     _Generic( (x), _GL_(p, P, T, F))                                   \
 
-#define GL_ASSIGN(C, x, ...)                                            \
+#define GL_SET(C, x, ...)                                               \
     GL_TRY(                                                             \
            _GL_GENERIC(C,                                               \
                        _GL_GENERIC_OP(x,, GrB, Matrix, setElement),     \
@@ -33,7 +33,7 @@
 // EXTRACT(v, v) Extract vector from vector
 // EXTRACT(s, v, i) get element
 
-#define GL_EXTRACT(x, C, ...)                                           \
+#define GL_GET(x, C, ...)                                               \
     GL_TRY(                                                             \
            _GL_GENERIC((C),                                             \
                        _GL_GENERIC_OP((x), *, GrB, Matrix, extractElement), \
@@ -43,9 +43,10 @@
 
 #define GL_EXISTS(e, x, C, ...)                                         \
     { GrB_Info info =  _GL_GENERIC((C),                                 \
-                                   _GL_GENERIC_OP((x),, GrB, Matrix, extractElement), \
-                                   _GL_GENERIC_OP((x),, GrB, Vector, extractElement), \
-                                   _GL_GENERIC_OP((x),, GxB, Scalar, extractElement)) \
+                                   _GL_GENERIC_OP((x), *, GrB, Matrix, extractElement), \
+                                   _GL_GENERIC_OP((x), *, GrB, Vector, extractElement), \
+                                   _GL_GENERIC_OP((x), *, GxB, Scalar, extractElement)) \
+      (x, C, __VA_ARGS__);                                             \
             if (info == GrB_NO_VALUE)                                   \
             (e) = false;                                                \
         else                                                            \

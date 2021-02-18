@@ -29,10 +29,10 @@ GrB_Vector louvain(GrB_Matrix A, uint64_t itermax) {
     GL_FOR(i, 0, i < itermax && changed) {
         changed = false;
         GL_FORI(j, k) {
-            GL_EXTRACT (Sj, S, j, .desc=GrB_DESC_T0) ;
+            GL_GET (Sj, S, j, .desc=GrB_DESC_T0) ;
             GL_ASSIGN  (S,  e, j);
-            GL_EXTRACT (v,  ApAT, j, .desc=GrB_DESC_T0) ;
-            GL_EXTRACT (f,  v, j) ;
+            GL_GET (v,  ApAT, j, .desc=GrB_DESC_T0) ;
+            GL_GET (f,  v, j) ;
             GL_APPLY   (v,  GrB_PLUS_FP32, v, f) ;
             GL_AXB     (q,  v, S) ;
             GL_NVALS   (tn, q);

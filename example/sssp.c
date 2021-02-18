@@ -5,7 +5,7 @@ GrB_Vector sssp(GrB_Matrix A, uint64_t start) {
     GrB_Vector v, w;
     GL_VNEW(v);
     GL_VNEW(w);
-    GL_ASSIGN(v, 0, start);
+    GL_SET(v, 0, start);
     GL_FORI(i, A) {
         GL_CLEAR(w);
         GL_ASSIGN(w, v);
