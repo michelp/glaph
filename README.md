@@ -1,8 +1,9 @@
 # glaph: (G)enerics (L)ibrary for Gr(aph)BLAS
 
-glaph is an include-only C library of macros and inline functions that
-make working with the GraphBLAS API less C like and more "Python
-like".  Just copy the header files directory into your project and do:
+glaph is an include-only C library of macros, inline functions and
+pure evil that make working with the GraphBLAS API less C like and
+more "Python like".  Just copy the header files directory into your
+project and do:
 
     #include "glaph/glaph.h"
 
@@ -11,22 +12,31 @@ like".  Just copy the header files directory into your project and do:
 Glaph is macro and inline function meta-boilerplate for dealing with
 GraphBLAS objects.  Instead of:
 
+	GrB_Matrix A;
     GrB_TRY(GrB_Matrix_new(&A, GrB_FP64, nrows, ncols));
     
 In glaph you just do:
 
-    MNEW(A);
+	GrB_Matrix A;
+    GL_NEW(A);
     
-This is a rather tame example of a glaph macro.  It initializes it as
-a hypersparse matrix with default type FP64.  It is now ready to use
-in your program for many cases.  But lets say you don't want a 10 by
-10 boolean matrix instead, do:
+It initializes it as a hypersparse matrix with default type FP64.  It
+is now ready to use in your program for many cases.  But this is a
+rather tame example of a glaph macro.  Lets say instead you want a 10
+by 10 boolean matrix:
 
-    MNEW(A, 10, 10, .type=GrB_BOOL);
+    GL_NEW(A, 10, 10, .type=GrB_BOOL);
     
 It's the same macro, it's just generic enough to handle various cases
 including optional types and dimensions provided as keywork arguments.
+How about a new vector?  Same macro, just pass a vector argument
+instead.  In this case it takes only one index argument for the vector
+size:
 
+	GrB_Vector j;
+    GL_NEW(j);                        // hypersparse FP_64
+    GL_NEW(j, 10, .type=GrB_BOOL);    // size=10 BOOL
+    
 Now, everyone knows C doesn't have keyword arguments.  Glaph bends
 reality with some macro and inline function sleigh of hand to make
 using the C api a lot easier by making many of the optional arguments

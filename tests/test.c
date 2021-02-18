@@ -7,9 +7,9 @@ void main(int argc, char *argv[]) {
     GxB_Scalar s, t, u, v;
     
     GL_INIT();
-    GL_MNEW(A); GL_MNEW(B); GL_MNEW(C); GL_MNEW(M, .type=GrB_BOOL);
-    GL_VNEW(k); GL_VNEW(j); GL_VNEW(l); GL_VNEW(m, .type=GrB_BOOL);
-    GL_SNEW(s); GL_SNEW(t); GL_SNEW(u); GL_SNEW(v, .type=GrB_BOOL);
+    GL_NEW(A); GL_NEW(B); GL_NEW(C); GL_NEW(M, .type=GrB_BOOL);
+    GL_NEW(k); GL_NEW(j); GL_NEW(l); GL_NEW(m, .type=GrB_BOOL);
+    GL_NEW(s); GL_NEW(t); GL_NEW(u); GL_NEW(v, .type=GrB_BOOL);
     
     GL_SET(A, 1.0, 0, 0);
     GL_SET(A, 1.0, 1, 1);
@@ -51,17 +51,16 @@ void main(int argc, char *argv[]) {
     printf("exists is %i d is %f\n", exists, d);
 
     GrB_Index Cn;
-    GL_NVALS(Cn, C);
+    GL_NV(Cn, C);
     printf("C nvals %lu\n", Cn);
     GL_CLEAR(C);
-    GL_NVALS(Cn, C);
+    GL_NV(Cn, C);
     printf("C clear nvals %lu\n", Cn);
     
-    GL_NVALS(Cn, j);
+    GL_NV(Cn, j);
     printf("j nvals %lu\n", Cn);
     GL_CLEAR(j);
-    GL_NVALS(Cn, j);
-    
+    GL_NV(Cn, j);
     printf("j clear nvals %lu\n", Cn);
     //GL_PRINT(GxB_ANY_SECOND_INT8, .level=5);
 

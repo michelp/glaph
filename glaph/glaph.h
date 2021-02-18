@@ -31,6 +31,15 @@ _GL_FUNC(GrB, init, GrB, init) {
     GL_TRY(GrB_init(mode));
 }
 
+#define _GL_GENERIC(C, M, V, S)                                         \
+    _Generic((C),                                                       \
+             GrB_Matrix : M,                                            \
+             GrB_Vector : V,                                            \
+             GxB_Scalar : S)
+
+#define _GL_GENERIC_OP(x, p, P, T, F)                       			\
+	_Generic( (x), _GL_(p, P, T, F))
+
 #define GL_INIT(...)                                                   \
     _GL_FNAME(GrB, init)((_GL_SNAME(GrB, init)){__VA_ARGS__})
 
@@ -81,6 +90,4 @@ _GL_FUNC(GrB, init, GrB, init) {
           void       * : prefix ## _ ## T ## _ ## func ## _UDT
 
 #include "matrix.h"
-#include "vector.h"
-#include "scalar.h"
 #include "generic.h"

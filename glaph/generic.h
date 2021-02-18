@@ -1,17 +1,48 @@
-#define _GL_GENERIC(C, M, V, S)                                         \
-    _Generic((C),                                                       \
-             GrB_Matrix : M,                                            \
-             GrB_Vector : V,                                            \
-             GxB_Scalar : S)
 
-#define _GL_GENERIC_OP(x, p, P, T, F)                       			\
-	_Generic( (x), _GL_(p, P, T, F))
+_GL_STRUCT(GrB, new,
+           GrB_Index nI; GrB_Index nJ; GrB_Type type);
 
-#define GL_NVALS(name, A)                                               \
+_GL_FUNC(GrB_Matrix, new, GrB, new, GrB_Matrix *A) {
+    _GL_KWARG(GrB_Index, nI, GxB_INDEX_MAX);
+    _GL_KWARG(GrB_Index, nJ, GxB_INDEX_MAX);
+    _GL_KWARG(GrB_Type, type, GrB_FP64);
+    GL_TRY(GrB_Matrix_new(A, type, nI, nJ));
+}
+
+_GL_FUNC(GrB_Vector, new, GrB, new, GrB_Vector *A) {
+    _GL_KWARG(GrB_Index, nI, GxB_INDEX_MAX);
+    _GL_KWARG(GrB_Type, type, GrB_FP64);
+    GL_TRY(GrB_Vector_new(A, type, nI));
+}
+
+_GL_FUNC(GxB_Scalar, new, GrB, new, GxB_Scalar *A) {
+    _GL_KWARG(GrB_Type, type, GrB_FP64);
+    GL_TRY(GxB_Scalar_new(A, type));
+}
+
+#define GL_NEW(A, ...)													\
+	_GL_GENERIC((A),													\
+				_GL_FNAME(GrB_Matrix, new),								\
+				_GL_FNAME(GrB_Vector, new),								\
+				_GL_FNAME(GxB_Scalar, new)								\
+				) 														\
+    (&A, (_GL_SNAME(GrB, new)){__VA_ARGS__})
+
+#define GL_NI(n, A)								\
+	GL_TRY(_GL_GENERIC((A),						\
+					   GrB_Matrix_nrows,		\
+					   GrB_Vector_size(&n, A)	\
+					   GrB_Vector_size(&n, A)	\
+					   )(&n, A))
+
+#define GL_NJ(n, A)								\
+	GL_TRY( GrB_Matrix_ncols(&n, A)
+
+#define GL_NV(name, A)													\
     _GL_GENERIC((A),                                                    \
                 GrB_Matrix_nvals,                                       \
                 GrB_Vector_nvals,                                       \
-                GrB_Matrix_nvals                                        \
+                GxB_Scalar_nvals                                        \
                 )(&name, A)
 
 #define GL_ASSIGN(C, A, ...)
@@ -94,3 +125,4 @@ _GL_PRINTER(GxB_Scalar, print);
                 GrB_Matrix_clear,                                       \
                 GrB_Vector_clear,                                       \
                 GxB_Scalar_clear)(C)
+
