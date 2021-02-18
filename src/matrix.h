@@ -9,7 +9,7 @@ _GL_FUNC(GrB_Matrix, new, GrB_Matrix, new, GrB_Matrix *A) {
     GL_TRY(GrB_Matrix_new(A, type, nrows, ncols));
 }
 #define GL_MNEW(A, ...)                                                 \
-    _GL_GrB_Matrix_new_func(&A, (_GL_SNAME(GrB_Matrix, new)){__VA_ARGS__})
+    _GL_FNAME(GrB_Matrix, new)(&A, (_GL_SNAME(GrB_Matrix, new)){__VA_ARGS__})
 
 #define GL_NROWS(A, name)                       \
     GL_TRY(GrB_Matrix_nrows(&name, A))

@@ -46,8 +46,8 @@
                                    _GL_GENERIC_OP((x), *, GrB, Matrix, extractElement), \
                                    _GL_GENERIC_OP((x), *, GrB, Vector, extractElement), \
                                    _GL_GENERIC_OP((x), *, GxB, Scalar, extractElement)) \
-      (x, C, __VA_ARGS__);                                             \
-            if (info == GrB_NO_VALUE)                                   \
+            (x, C, __VA_ARGS__);                                        \
+        if (info == GrB_NO_VALUE)                                       \
             (e) = false;                                                \
         else                                                            \
             (e) = true;                                                 \
@@ -76,16 +76,15 @@ _GL_STRUCT(GrB, print, int level);
         GL_TRY(GxB_print(A, level));                                    \
     }
 
-_GL_PRINTER(GrB_Matrix,   print);
-_GL_PRINTER(GrB_Vector,   print);
-_GL_PRINTER(GrB_Semiring, print);
+_GL_PRINTER(GrB_Matrix, print);
+_GL_PRINTER(GrB_Vector, print);
+_GL_PRINTER(GxB_Scalar, print);
 
 #define GL_PRINT(C, ...)                                                \
-_Generic(                                                               \
-         (C),                                                           \
-         GrB_Semiring: _GL_FNAME(GrB_Semiring,   print),                \
-         GrB_Vector:   _GL_FNAME(GrB_Vector,   print),                  \
-         GrB_Matrix:   _GL_FNAME(GrB_Matrix,   print))                  \
-(C, (_GL_SNAME(GrB, print)){__VA_ARGS__});
+    _GL_GENERIC((C),                                                    \
+                _GL_FNAME(GrB_Matrix, print),                           \
+                _GL_FNAME(GrB_Vector, print),                           \
+                _GL_FNAME(GxB_Scalar, print))                           \
+    (C, (_GL_SNAME(GrB, print)){__VA_ARGS__});
 
 #define GL_CLEAR(...)

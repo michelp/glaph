@@ -1,10 +1,10 @@
-# glaph: Generics Library for GraphBLAS
+# glaph: (G)enerics (L)ibrary for Gr(aph)BLAS
 
 glaph is an include-only C library of macros and inline functions that
 make working with the GraphBLAS API less C like and more "Python
-like".  Just copy the header files into your project and do:
+like".  Just copy the header files directory into your project and do:
 
-    #include "glaph.h"
+    #include "glaph/glaph.h"
 
 ## So what's so funny
 
@@ -28,11 +28,16 @@ It's the same macro, it's just generic enough to handle various cases
 including optional types and dimensions provided as keywork arguments.
 
 Now, everyone knows C doesn't have keyword arguments.  Glaph bends
-reality with some macro sleigh of hand to make using the C api a lot
-easier.  Combined with the polymorphism of generic macros, there is a
-lot of simplication and glaph algorithms are usualy line for line
-operationally identical to their Python equivalents.  Don't worry it's
-all pure 100% C!
+reality with some macro and inline function sleigh of hand to make
+using the C api a lot easier by making many of the optional arguments
+defaulted internally my the glaph macros.  Combined with the
+polymorphism of C11 style `_Generic()` macros, there is a lot of
+simplication, and glaph algorithms are usualy line for line
+operationally identical to their Python equivalents.  
+
+There are no external dependencies and no runtime.  Glaph generates C
+code using standard `#define` C preprocessor macros that is directly
+compiled like any other GraphBLAS program.  
 
 Another example is that where the GraphBLAS C API provides `GrB_mxm`,
 `GrB_mxv` and `GrB_vxm` for Matix/Matrix, Matrix/Vector, and

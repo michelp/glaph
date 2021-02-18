@@ -11,7 +11,16 @@
 
 #define _GL_KWARG(T, m, d) T m = kwargs.m ? kwargs.m : (d)
 
-#define GL_INIT() { printf("glaph ((G)eneric (L)ibrary for Gr(aph)BLAS) 0.1\n"); GrB_init(GrB_NONBLOCKING); }
+_GL_STRUCT(GrB, init, GrB_Mode mode);
+
+_GL_FUNC(GrB, init, GrB, init) {
+    _GL_KWARG(GrB_Mode, mode, GrB_NONBLOCKING);
+    GL_TRY(GrB_init(mode));
+}
+    
+#define GL_INIT(...)                                                   \
+    _GL_FNAME(GrB, init)((_GL_SNAME(GrB, init)){__VA_ARGS__})           \
+        
 #define GL_FINALIZE() GrB_finalize();
 #define GL_FOR(i, s, e) for(GrB_Index (i) = (s); (e); (i)++)
 #define GL_FREE(...)

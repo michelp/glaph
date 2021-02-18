@@ -8,9 +8,8 @@ _GL_FUNC(GrB_Vector, new, GrB_Vector, new, GrB_Vector *A) {
     GL_TRY(GrB_Vector_new(A, type, size));
 }
 
-#define GL_VNEW(v, ...)                         \
-    _GL_FNAME(GrB_Vector, new)\
-    (&v, (_GL_SNAME(GrB_Vector, new)){__VA_ARGS__})
+#define GL_VNEW(v, ...)                                                 \
+    _GL_FNAME(GrB_Vector, new)(&v, (_GL_SNAME(GrB_Vector, new)){__VA_ARGS__})
     
 #define GL_VSIZE(A, name)                               \
     GrB_Index name; GL_TRY(GrB_Vector_size(&name, A))

@@ -44,7 +44,13 @@ void main(int argc, char *argv[]) {
     GL_EXISTS(exists, &d, C, 1, 1);
     printf("exists is %i d is %f\n", exists, d);
     
-    GL_PRINT(GxB_ANY_SECOND_INT8, .level=5);
+    GL_EXISTS(exists, &d, j, 0);
+    printf("exists is %i d is %f\n", exists, d);
+    
+    GL_EXISTS(exists, &d, j, 2);
+    printf("exists is %i d is %f\n", exists, d);
+    
+    //GL_PRINT(GxB_ANY_SECOND_INT8, .level=5);
 
     GL_FINALIZE();
 }
