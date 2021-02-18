@@ -1,3 +1,11 @@
+#define _GL_GENERIC(C, M, V, S)                                         \
+    _Generic((C),                                                       \
+             GrB_Matrix : M,                                            \
+             GrB_Vector : V,                                            \
+             GxB_Scalar : S)
+
+#define _GL_GENERIC_OP(x, p, P, T, F)                       			\
+	_Generic( (x), _GL_(p, P, T, F))
 
 #define GL_NVALS(name, A)                                               \
     _GL_GENERIC((A),                                                    \
@@ -5,14 +13,6 @@
                 GrB_Vector_nvals,                                       \
                 GrB_Matrix_nvals                                        \
                 )(&name, A)
-
-#define _GL_GENERIC(C, M, V, S)                                         \
-    _Generic((C),                                                       \
-             GrB_Matrix : M,                                            \
-             GrB_Vector : V,                                            \
-             GxB_Scalar : S)
-
-#define _GL_GENERIC_OP(x, p, P, T, F) _Generic( (x), _GL_(p, P, T, F))
 
 #define GL_ASSIGN(C, A, ...)
 

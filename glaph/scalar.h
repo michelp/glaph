@@ -4,7 +4,7 @@ _GL_STRUCT(GxB_Scalar, new, GrB_Type type);
 
 _GL_FUNC(GxB_Scalar, new, GxB_Scalar, new, GxB_Scalar *A) {
     _GL_KWARG(GrB_Type, type, GrB_FP64);
-    GL_TRY(GxB_Scalar_new(A, type));g
+    GL_TRY(GxB_Scalar_new(A, type));
 }
 
 #define GL_SNEW(s, ...)                                      \
