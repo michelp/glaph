@@ -62,7 +62,6 @@ void main(int argc, char *argv[]) {
     GL_CLEAR(j);
     GL_NV(Cn, j);
     printf("j clear nvals %lu\n", Cn);
-    //GL_PRINT(GxB_ANY_SECOND_INT8, .level=5);
-
+	GL_FREE(A, B, C, M, k, j, l, m, s, t, u, v);
     GL_FINALIZE();
 }

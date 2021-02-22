@@ -83,10 +83,10 @@ This is the shortest path example:
 
     GrB_Vector sssp(GrB_Matrix A, uint64_t start) {
         GrB_Vector v, w;
-        GL_VNEW(v);
-        GL_VNEW(w);
+        GL_NEW(v);
+        GL_NEW(w);
         GL_ASSIGN(v, start, 0);
-        GL_FORI(A, i) {
+        GL_FORI(i, A) {
             GL_CLEAR(w);
             GL_ASSIGN(w, v);
             GL_AXB(v, v, A,
